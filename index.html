@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RemoteDesk</title>
+<meta name="description" content="맥과 윈도우를 오가는 원격 데스크톱. 아이폰 Safari로도 접속합니다.">
+<style>
+:root {
+  --bg: #f7f8fa; --card: #ffffff; --text: #16181d; --muted: #5d6573; --line: #e3e6eb;
+  --accent: #2563eb; --accent-text: #ffffff; --soft: #eaf0fe;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1115; --card: #171a21; --text: #e9ebef; --muted: #9aa2b1; --line: #262b35;
+    --accent: #5b8cff; --accent-text: #0b0d12; --soft: #1b2440;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1115; --card: #171a21; --text: #e9ebef; --muted: #9aa2b1; --line: #262b35;
+  --accent: #5b8cff; --accent-text: #0b0d12; --soft: #1b2440;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+  word-break: keep-all;
+}
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+header.hero { padding: 72px 0 48px; text-align: center; }
+.logo { width: 64px; height: 64px; border-radius: 16px; background: var(--accent); display: inline-grid; place-items: center; margin-bottom: 20px; }
+.logo svg { width: 36px; height: 36px; }
+h1 { font-size: clamp(32px, 6vw, 48px); margin: 0 0 12px; letter-spacing: -0.02em; }
+.lead { font-size: clamp(17px, 2.4vw, 20px); color: var(--muted); margin: 0 auto 32px; max-width: 640px; }
+.dl { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.btn {
+  display: inline-flex; flex-direction: column; align-items: center; min-width: 200px;
+  padding: 12px 20px; border-radius: 12px; text-decoration: none; font-weight: 600;
+  border: 1px solid var(--line); background: var(--card); color: var(--text);
+}
+.btn small { font-weight: 400; color: var(--muted); font-size: 13px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn.primary small { color: inherit; opacity: .8; }
+.ver { margin-top: 16px; color: var(--muted); font-size: 14px; }
+.ver a { color: inherit; }
+section { padding: 40px 0; }
+h2 { font-size: 26px; margin: 0 0 20px; letter-spacing: -0.01em; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.card h3 { margin: 0 0 6px; font-size: 17px; }
+.card p { margin: 0; color: var(--muted); font-size: 15px; }
+ol, ul { padding-left: 22px; margin: 0; }
+li { margin: 6px 0; }
+.note { background: var(--soft); border-radius: 12px; padding: 14px 16px; font-size: 15px; margin-top: 16px; }
+code { font: 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--soft); padding: 1px 6px; border-radius: 6px; }
+footer { padding: 40px 0 56px; color: var(--muted); font-size: 14px; text-align: center; border-top: 1px solid var(--line); margin-top: 24px; }
+footer a { color: inherit; }
+</style>
+</head>
+<body>
+<header class="hero wrap">
+  <div class="logo" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M9 10.5l2 2 4-4"/></svg>
+  </div>
+  <h1>RemoteDesk</h1>
+  <p class="lead">맥과 윈도우를 서로 오가는 원격 데스크톱입니다. 아이폰 Safari에서도 앱 설치 없이 접속합니다.</p>
+  <div class="dl" id="dl">
+    <a class="btn" data-asset="macOS-arm64.dmg" href="https://github.com/sanghakbae/remotedesk-releases/releases/latest">macOS (Apple 실리콘)<small>M1·M2·M3·M4</small></a>
+    <a class="btn" data-asset="macOS-x86_64.dmg" href="https://github.com/sanghakbae/remotedesk-releases/releases/latest">macOS (Intel)<small>인텔 맥</small></a>
+    <a class="btn" data-asset="Windows-Setup.exe" href="https://github.com/sanghakbae/remotedesk-releases/releases/latest">Windows<small>설치 프로그램</small></a>
+  </div>
+  <p class="ver" id="ver"><a href="https://github.com/sanghakbae/remotedesk-releases/releases">모든 버전 보기</a></p>
+</header>
+
+<main class="wrap">
+  <section>
+    <h2>기능</h2>
+    <div class="grid">
+      <div class="card"><h3>맥 ↔ 윈도우 양방향</h3><p>맥에서 윈도우로, 윈도우에서 맥으로, 같은 운영체제끼리도 접속합니다. 단축키는 상대 운영체제에 맞게 바꿔 보냅니다.</p></div>
+      <div class="card"><h3>아이폰·태블릿 웹 접속</h3><p>Safari로 주소만 열면 됩니다. 탭은 클릭, 길게 누르면 오른쪽 클릭, 두 손가락으로 확대·이동합니다.</p></div>
+      <div class="card"><h3>최대 60fps</h3><p>macOS는 ScreenCaptureKit으로 화면을 잡아 바뀐 부분만 보냅니다. 실제 속도는 네트워크에 따라 다릅니다.</p></div>
+      <div class="card"><h3>해상도 자동 맞춤</h3><p>원격 컴퓨터의 해상도에 맞춰 창 크기를 정하고, 화질 단계(낮음·보통·높음·최고)를 고를 수 있습니다.</p></div>
+      <div class="card"><h3>클립보드 공유</h3><p>텍스트, 이미지, 파일을 복사해 반대편에 붙여 넣습니다.</p></div>
+      <div class="card"><h3>한글 입력</h3><p>한/영 전환과 한글 입력을 지원합니다. 아이폰 키보드의 한글 조합도 그대로 전달됩니다.</p></div>
+      <div class="card"><h3>잠자기 방지</h3><p>공유하는 동안 컴퓨터가 잠들지 않게 해 접속이 끊기지 않습니다.</p></div>
+      <div class="card"><h3>암호화</h3><p>비밀번호로 키를 만들어 모든 화면과 입력을 AES-GCM으로 암호화합니다. 웹 접속은 HTTPS를 씁니다.</p></div>
+      <div class="card"><h3>서명된 자동 업데이트</h3><p>새 버전을 받아 서명을 확인한 뒤, 사용 중이 아닐 때 설치합니다. 설정에서 끌 수 있습니다.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>시작하기</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>1. 접속받을 컴퓨터</h3>
+        <ol>
+          <li>RemoteDesk를 설치하고 엽니다.</li>
+          <li>비밀번호를 정하고 <b>공유 시작</b>을 누릅니다.</li>
+          <li>화면에 나온 주소를 확인합니다.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>2. 접속하는 컴퓨터</h3>
+        <ol>
+          <li>RemoteDesk를 열고 주소와 비밀번호를 넣습니다.</li>
+          <li><b>연결</b>을 누릅니다.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>3. 아이폰에서</h3>
+        <ol>
+          <li>Safari로 <code>https://주소:47801</code> 을 엽니다.</li>
+          <li>처음 한 번은 화면 안내대로 인증서를 설치합니다.</li>
+          <li>비밀번호를 넣고 접속합니다.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>설치 안내</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>macOS</h3>
+        <ul>
+          <li>macOS 12 이상. Apple 실리콘과 Intel 맥 모두 지원합니다.</li>
+          <li>처음 열 때 경고가 나오면 <b>시스템 설정 → 개인정보 보호 및 보안</b>에서 <b>그래도 열기</b>를 누릅니다.</li>
+          <li>접속받을 맥은 <b>화면 기록</b>과 <b>손쉬운 사용</b> 권한을 켜야 합니다.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Windows</h3>
+        <ul>
+          <li>Windows 10, 11 (64비트).</li>
+          <li>SmartScreen 경고가 나오면 <b>추가 정보 → 실행</b>을 누릅니다.</li>
+          <li>방화벽 허용 창이 나오면 허용합니다.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">외부에서 접속하려면 접속받을 컴퓨터의 공유기에서 포트 47800(앱)과 47801(웹)을 열어 두어야 합니다. 같은 네트워크 안에서는 따로 설정할 것이 없습니다.</p>
+  </section>
+</main>
+
+<footer class="wrap">
+  RemoteDesk · <a href="https://github.com/sanghakbae/remotedesk-releases/releases">릴리스</a>
+</footer>
+
+<script>
+(async () => {
+  try {
+    const r = await fetch("https://api.github.com/repos/sanghakbae/remotedesk-releases/releases/latest", {
+      headers: { Accept: "application/vnd.github+json" } });
+    if (!r.ok) return;
+    const rel = await r.json();
+    const assets = rel.assets || [];
+    document.querySelectorAll("[data-asset]").forEach(a => {
+      const hit = assets.find(x => x.name.endsWith(a.dataset.asset));
+      if (hit) a.href = hit.browser_download_url;
+    });
+    const v = document.getElementById("ver");
+    const d = rel.published_at ? new Date(rel.published_at).toLocaleDateString("ko-KR") : "";
+    v.innerHTML = "";
+    v.append(`최신 버전 ${rel.tag_name}${d ? " · " + d : ""} · `);
+    const all = document.createElement("a");
+    all.href = "https://github.com/sanghakbae/remotedesk-releases/releases";
+    all.textContent = "모든 버전 보기";
+    v.append(all);
+  } catch (e) {}
+  // highlight the button for this device
+  const ua = navigator.userAgent;
+  let key = /Windows/.test(ua) ? "Windows-Setup.exe" : /Macintosh/.test(ua) ? "macOS-arm64.dmg" : "";
+  const b = key && document.querySelector(`[data-asset="${key}"]`);
+  if (b) b.classList.add("primary");
+})();
+</script>
+</body>
+</html>
